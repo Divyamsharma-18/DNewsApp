@@ -8,7 +8,7 @@ const Newsboard = ({category}) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        let url = `https://newsapi.org/v2/top-headlines?country=in&category=${category}&apiKey=25d70a69c25b4d2285c74b5a53830d96`;
+        let url = `https://newsapi.org/v2/top-headlines?country=in&category=${category}&apiKey=${import.meta.env.VITE_API_KEY}`;
         let response = await fetch(url);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
