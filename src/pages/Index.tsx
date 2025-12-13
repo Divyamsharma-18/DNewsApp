@@ -4,21 +4,24 @@ import CategoryNav from "@/components/news/CategoryNav";
 import FeaturedArticle from "@/components/news/FeaturedArticle";
 import ArticleGrid from "@/components/news/ArticleGrid";
 import TrendingSidebar from "@/components/news/TrendingSidebar";
-import { useGuardianNews, useFeaturedNews } from "@/hooks/useGuardianNews";
+import { useGuardianNews } from "@/hooks/useGuardianNews";
+import { useBookmarks } from "@/hooks/useBookmarks";
 
 const Index = () => {
   const [activeCategory, setActiveCategory] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const [showBookmarks, setShowBookmarks] = useState(false);
 
   const { data: articles = [], isLoading } = useGuardianNews(
     activeCategory,
     searchQuery
   );
-  const { data: featuredArticles = [], isLoading: featuredLoading } =
-    useFeaturedNews();
+
+  const { bookmarks, toggleBookmark, isBookmarked } = useBookmarks();
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
+    setShowBookmarks(false);
     if (query) {
       setActiveCategory("all");
     }
@@ -27,29 +30,61 @@ const Index = () => {
   const handleCategoryChange = (category: string) => {
     setActiveCategory(category);
     setSearchQuery("");
+    setShowBookmarks(false);
   };
 
-  const featuredArticle = featuredArticles[0];
-  const gridArticles = searchQuery ? articles : articles.slice(0, 12);
+  const handleShowBookmarks = () => {
+    setShowBookmarks(!showBookmarks);
+    if (!showBookmarks) {
+      setSearchQuery("");
+    }
+  };
+
+  const featuredArticle = articles[0];
+  const gridArticles = showBookmarks 
+    ? bookmarks 
+    : searchQuery 
+      ? articles 
+      : articles.slice(1, 13);
+  const trendingArticles = articles.slice(1, 6);
 
   return (
     <div className="min-h-screen bg-background">
-      <Header onSearch={handleSearch} />
+      <Header 
+        onSearch={handleSearch} 
+        bookmarkCount={bookmarks.length}
+        onShowBookmarks={handleShowBookmarks}
+        showingBookmarks={showBookmarks}
+      />
       <CategoryNav
         activeCategory={activeCategory}
         onCategoryChange={handleCategoryChange}
       />
 
       <main className="container mx-auto px-6 py-8">
-        {/* Featured Section */}
-        {!searchQuery && featuredArticle && (
+        {/* Bookmarks Header */}
+        {showBookmarks && (
+          <div className="mb-8">
+            <h2 className="text-2xl font-serif font-medium">Your Bookmarks</h2>
+            <p className="text-muted-foreground mt-1">
+              {bookmarks.length} saved {bookmarks.length === 1 ? 'article' : 'articles'}
+            </p>
+          </div>
+        )}
+
+        {/* Featured Section - shows when not searching or viewing bookmarks */}
+        {!searchQuery && !showBookmarks && featuredArticle && (
           <section className="mb-12 opacity-0 animate-fade-up" style={{ animationFillMode: "forwards" }}>
-            <FeaturedArticle article={featuredArticle} />
+            <FeaturedArticle 
+              article={featuredArticle}
+              isBookmarked={isBookmarked(featuredArticle.id)}
+              onToggleBookmark={toggleBookmark}
+            />
           </section>
         )}
 
         {/* Search Results Header */}
-        {searchQuery && (
+        {searchQuery && !showBookmarks && (
           <div className="mb-8">
             <h2 className="text-2xl font-serif font-medium">
               Results for "{searchQuery}"
@@ -63,17 +98,24 @@ const Index = () => {
         {/* Main Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           <div className="lg:col-span-3">
-            <ArticleGrid articles={gridArticles} isLoading={isLoading} />
+            <ArticleGrid 
+              articles={gridArticles} 
+              isLoading={isLoading && !showBookmarks}
+              isBookmarked={isBookmarked}
+              onToggleBookmark={toggleBookmark}
+            />
           </div>
 
-          <aside className="hidden lg:block">
-            <div className="sticky top-40">
-              <TrendingSidebar
-                articles={featuredArticles.slice(1, 6)}
-                isLoading={featuredLoading}
-              />
-            </div>
-          </aside>
+          {!showBookmarks && (
+            <aside className="hidden lg:block">
+              <div className="sticky top-40">
+                <TrendingSidebar
+                  articles={trendingArticles}
+                  isLoading={isLoading}
+                />
+              </div>
+            </aside>
+          )}
         </div>
       </main>
 

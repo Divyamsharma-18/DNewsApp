@@ -4,6 +4,8 @@ import ArticleCard from "./ArticleCard";
 interface ArticleGridProps {
   articles: Article[];
   isLoading: boolean;
+  isBookmarked?: (id: string) => boolean;
+  onToggleBookmark?: (article: Article) => void;
 }
 
 const ArticleSkeleton = () => (
@@ -22,7 +24,7 @@ const ArticleSkeleton = () => (
   </div>
 );
 
-const ArticleGrid = ({ articles, isLoading }: ArticleGridProps) => {
+const ArticleGrid = ({ articles, isLoading, isBookmarked, onToggleBookmark }: ArticleGridProps) => {
   if (isLoading) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -52,7 +54,11 @@ const ArticleGrid = ({ articles, isLoading }: ArticleGridProps) => {
           className="opacity-0 animate-fade-up"
           style={{ animationDelay: `${index * 0.05}s`, animationFillMode: "forwards" }}
         >
-          <ArticleCard article={article} />
+          <ArticleCard 
+            article={article} 
+            isBookmarked={isBookmarked?.(article.id)}
+            onToggleBookmark={onToggleBookmark}
+          />
         </div>
       ))}
     </div>

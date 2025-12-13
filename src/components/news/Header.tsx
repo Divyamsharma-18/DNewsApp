@@ -1,11 +1,14 @@
-import { Search } from "lucide-react";
+import { Search, Bookmark } from "lucide-react";
 import { useState } from "react";
 
 interface HeaderProps {
   onSearch: (query: string) => void;
+  bookmarkCount: number;
+  onShowBookmarks: () => void;
+  showingBookmarks: boolean;
 }
 
-const Header = ({ onSearch }: HeaderProps) => {
+const Header = ({ onSearch, bookmarkCount, onShowBookmarks, showingBookmarks }: HeaderProps) => {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
 
@@ -27,7 +30,7 @@ const Header = ({ onSearch }: HeaderProps) => {
             </h1>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
             {searchOpen ? (
               <form onSubmit={handleSearch} className="animate-fade-in">
                 <input
@@ -51,11 +54,23 @@ const Header = ({ onSearch }: HeaderProps) => {
                 <Search className="w-5 h-5 text-muted-foreground" />
               </button>
             )}
+
+            <button
+              onClick={onShowBookmarks}
+              className={`p-2 rounded-full transition-colors duration-200 relative ${showingBookmarks ? 'bg-primary/20 text-primary' : 'hover:bg-secondary'}`}
+              aria-label="Bookmarks"
+            >
+              <Bookmark className={`w-5 h-5 ${showingBookmarks ? 'fill-primary text-primary' : 'text-muted-foreground'}`} />
+              {bookmarkCount > 0 && (
+                <span className="absolute -top-1 -right-1 w-5 h-5 bg-primary text-primary-foreground text-xs rounded-full flex items-center justify-center font-medium">
+                  {bookmarkCount > 9 ? '9+' : bookmarkCount}
+                </span>
+              )}
+            </button>
           </div>
         </div>
       </div>
     </header>
   );
 };
-
 export default Header;

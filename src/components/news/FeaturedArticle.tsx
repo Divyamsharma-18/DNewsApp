@@ -1,15 +1,23 @@
 import { Article } from "@/types/news";
 import { formatDistanceToNow } from "date-fns";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Bookmark } from "lucide-react";
 
 interface FeaturedArticleProps {
   article: Article;
+  isBookmarked?: boolean;
+  onToggleBookmark?: (article: Article) => void;
 }
 
-const FeaturedArticle = ({ article }: FeaturedArticleProps) => {
+const FeaturedArticle = ({ article, isBookmarked = false, onToggleBookmark }: FeaturedArticleProps) => {
   const timeAgo = formatDistanceToNow(new Date(article.webPublicationDate), {
     addSuffix: true,
   });
+
+  const handleBookmarkClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onToggleBookmark?.(article);
+  };
 
   return (
     <a
@@ -29,6 +37,17 @@ const FeaturedArticle = ({ article }: FeaturedArticleProps) => {
       )}
 
       <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent" />
+
+      {onToggleBookmark && (
+        <button
+          onClick={handleBookmarkClick}
+          className="absolute top-4 right-4 p-2.5 rounded-full bg-background/80 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity z-10"
+        >
+          <Bookmark 
+            className={`w-5 h-5 transition-colors ${isBookmarked ? 'fill-primary text-primary' : 'text-muted-foreground hover:text-primary'}`} 
+          />
+        </button>
+      )}
 
       <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10">
         <div className="flex items-center gap-3 mb-4">

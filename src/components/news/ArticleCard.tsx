@@ -1,15 +1,29 @@
 import { Article } from "@/types/news";
 import { formatDistanceToNow } from "date-fns";
+import { Bookmark } from "lucide-react";
 
 interface ArticleCardProps {
   article: Article;
   variant?: "default" | "compact";
+  isBookmarked?: boolean;
+  onToggleBookmark?: (article: Article) => void;
 }
 
-const ArticleCard = ({ article, variant = "default" }: ArticleCardProps) => {
+const ArticleCard = ({ 
+  article, 
+  variant = "default",
+  isBookmarked = false,
+  onToggleBookmark 
+}: ArticleCardProps) => {
   const timeAgo = formatDistanceToNow(new Date(article.webPublicationDate), {
     addSuffix: true,
   });
+
+  const handleBookmarkClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onToggleBookmark?.(article);
+  };
 
   if (variant === "compact") {
     return (
@@ -17,7 +31,7 @@ const ArticleCard = ({ article, variant = "default" }: ArticleCardProps) => {
         href={article.webUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="group flex gap-4 p-4 rounded-2xl bg-card/50 hover:bg-card border border-border/30 hover:border-border/60 transition-all duration-300"
+        className="group flex gap-4 p-4 rounded-2xl bg-card/50 hover:bg-card border border-border/30 hover:border-border/60 transition-all duration-300 relative"
       >
         {article.fields?.thumbnail && (
           <div className="w-20 h-20 rounded-xl overflow-hidden flex-shrink-0">
@@ -39,6 +53,16 @@ const ArticleCard = ({ article, variant = "default" }: ArticleCardProps) => {
             {timeAgo}
           </span>
         </div>
+        {onToggleBookmark && (
+          <button
+            onClick={handleBookmarkClick}
+            className="absolute top-3 right-3 p-1.5 rounded-full bg-background/80 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity"
+          >
+            <Bookmark 
+              className={`w-4 h-4 transition-colors ${isBookmarked ? 'fill-primary text-primary' : 'text-muted-foreground hover:text-primary'}`} 
+            />
+          </button>
+        )}
       </a>
     );
   }
@@ -48,7 +72,7 @@ const ArticleCard = ({ article, variant = "default" }: ArticleCardProps) => {
       href={article.webUrl}
       target="_blank"
       rel="noopener noreferrer"
-      className="article-card hover-lift"
+      className="article-card hover-lift group relative"
     >
       {article.fields?.thumbnail && (
         <div className="aspect-[16/10] overflow-hidden">
@@ -58,6 +82,17 @@ const ArticleCard = ({ article, variant = "default" }: ArticleCardProps) => {
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
           />
         </div>
+      )}
+
+      {onToggleBookmark && (
+        <button
+          onClick={handleBookmarkClick}
+          className="absolute top-3 right-3 p-2 rounded-full bg-background/80 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity"
+        >
+          <Bookmark 
+            className={`w-5 h-5 transition-colors ${isBookmarked ? 'fill-primary text-primary' : 'text-muted-foreground hover:text-primary'}`} 
+          />
+        </button>
       )}
 
       <div className="p-5">
