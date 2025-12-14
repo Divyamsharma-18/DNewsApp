@@ -38,5 +38,21 @@ export const useBookmarks = () => {
     [bookmarks]
   );
 
-  return { bookmarks, addBookmark, removeBookmark, toggleBookmark, isBookmarked };
+  const clearAllBookmarks = useCallback(() => {
+    setBookmarks([]);
+  }, []);
+
+  const removeMultipleBookmarks = useCallback((articleIds: string[]) => {
+    setBookmarks((prev) => prev.filter((a) => !articleIds.includes(a.id)));
+  }, []);
+
+  return { 
+    bookmarks, 
+    addBookmark, 
+    removeBookmark, 
+    toggleBookmark, 
+    isBookmarked, 
+    clearAllBookmarks,
+    removeMultipleBookmarks 
+  };
 };
