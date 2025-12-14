@@ -10,6 +10,8 @@ const categories: Category[] = [
   { id: "culture", name: "Culture" },
   { id: "science", name: "Science" },
   { id: "environment", name: "Environment" },
+  { id: "fashion", name: "Beauty" },
+  { id: "lifeandstyle", name: "Lifestyle" },
 ];
 
 interface CategoryNavProps {

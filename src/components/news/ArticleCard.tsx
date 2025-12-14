@@ -1,6 +1,7 @@
 import { Article } from "@/types/news";
 import { formatDistanceToNow } from "date-fns";
-import { Bookmark } from "lucide-react";
+import { Bookmark, Share2 } from "lucide-react";
+import { toast } from "sonner";
 
 interface ArticleCardProps {
   article: Article;
@@ -23,6 +24,30 @@ const ArticleCard = ({
     e.preventDefault();
     e.stopPropagation();
     onToggleBookmark?.(article);
+  };
+
+  const handleShare = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const shareData = {
+      title: article.webTitle,
+      url: article.webUrl,
+    };
+
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+      } else {
+        await navigator.clipboard.writeText(article.webUrl);
+        toast.success("Link copied to clipboard!");
+      }
+    } catch (error) {
+      if ((error as Error).name !== 'AbortError') {
+        await navigator.clipboard.writeText(article.webUrl);
+        toast.success("Link copied to clipboard!");
+      }
+    }
   };
 
   if (variant === "compact") {
@@ -53,16 +78,24 @@ const ArticleCard = ({
             {timeAgo}
           </span>
         </div>
-        {onToggleBookmark && (
+        <div className="absolute top-3 right-3 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
           <button
-            onClick={handleBookmarkClick}
-            className="absolute top-3 right-3 p-1.5 rounded-full bg-background/80 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity"
+            onClick={handleShare}
+            className="p-1.5 rounded-full bg-background/80 backdrop-blur-sm"
           >
-            <Bookmark 
-              className={`w-4 h-4 transition-colors ${isBookmarked ? 'fill-primary text-primary' : 'text-muted-foreground hover:text-primary'}`} 
-            />
+            <Share2 className="w-4 h-4 text-muted-foreground hover:text-primary transition-colors" />
           </button>
-        )}
+          {onToggleBookmark && (
+            <button
+              onClick={handleBookmarkClick}
+              className="p-1.5 rounded-full bg-background/80 backdrop-blur-sm"
+            >
+              <Bookmark 
+                className={`w-4 h-4 transition-colors ${isBookmarked ? 'fill-primary text-primary' : 'text-muted-foreground hover:text-primary'}`} 
+              />
+            </button>
+          )}
+        </div>
       </a>
     );
   }
@@ -85,16 +118,24 @@ const ArticleCard = ({
           </div>
         )}
 
-        {onToggleBookmark && (
+        <div className="absolute top-3 right-3 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity z-10">
           <button
-            onClick={handleBookmarkClick}
-            className="absolute top-3 right-3 p-2 rounded-full bg-background/80 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity z-10"
+            onClick={handleShare}
+            className="p-2 rounded-full bg-background/80 backdrop-blur-sm"
           >
-            <Bookmark 
-              className={`w-5 h-5 transition-colors ${isBookmarked ? 'fill-primary text-primary' : 'text-muted-foreground hover:text-primary'}`} 
-            />
+            <Share2 className="w-5 h-5 text-muted-foreground hover:text-primary transition-colors" />
           </button>
-        )}
+          {onToggleBookmark && (
+            <button
+              onClick={handleBookmarkClick}
+              className="p-2 rounded-full bg-background/80 backdrop-blur-sm"
+            >
+              <Bookmark 
+                className={`w-5 h-5 transition-colors ${isBookmarked ? 'fill-primary text-primary' : 'text-muted-foreground hover:text-primary'}`} 
+              />
+            </button>
+          )}
+        </div>
       </div>
 
       <div className="p-5">
@@ -120,5 +161,4 @@ const ArticleCard = ({
     </a>
   );
 };
-
 export default ArticleCard;
