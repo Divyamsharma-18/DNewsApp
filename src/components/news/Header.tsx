@@ -1,4 +1,4 @@
-import { Search, Bookmark } from "lucide-react";
+import { Search, Bookmark, Star } from "lucide-react";
 import { useState } from "react";
 
 interface HeaderProps {
@@ -31,6 +31,16 @@ const Header = ({ onSearch, bookmarkCount, onShowBookmarks, showingBookmarks }: 
           </div>
 
           <div className="flex items-center gap-2">
+            <a
+              href="https://github.com/Divyamsharma-18/DNewsApp"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-secondary/80 hover:bg-secondary text-sm font-medium transition-colors duration-200"
+            >
+              <Star className="w-4 h-4" />
+              <span className="hidden sm:inline">Star on GitHub</span>
+            </a>
+
             {searchOpen ? (
               <form onSubmit={handleSearch} className="animate-fade-in">
                 <input

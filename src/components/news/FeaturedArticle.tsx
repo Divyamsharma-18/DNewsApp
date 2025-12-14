@@ -1,6 +1,7 @@
 import { Article } from "@/types/news";
 import { formatDistanceToNow } from "date-fns";
-import { ArrowUpRight, Bookmark } from "lucide-react";
+import { ArrowUpRight, Bookmark, Share2 } from "lucide-react";
+import { toast } from "sonner";
 
 interface FeaturedArticleProps {
   article: Article;
@@ -17,6 +18,30 @@ const FeaturedArticle = ({ article, isBookmarked = false, onToggleBookmark }: Fe
     e.preventDefault();
     e.stopPropagation();
     onToggleBookmark?.(article);
+  };
+
+  const handleShare = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const shareData = {
+      title: article.webTitle,
+      url: article.webUrl,
+    };
+
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+      } else {
+        await navigator.clipboard.writeText(article.webUrl);
+        toast.success("Link copied to clipboard!");
+      }
+    } catch (error) {
+      if ((error as Error).name !== 'AbortError') {
+        await navigator.clipboard.writeText(article.webUrl);
+        toast.success("Link copied to clipboard!");
+      }
+    }
   };
 
   return (
@@ -38,16 +63,24 @@ const FeaturedArticle = ({ article, isBookmarked = false, onToggleBookmark }: Fe
 
       <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent" />
 
-      {onToggleBookmark && (
+      <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
         <button
-          onClick={handleBookmarkClick}
-          className="absolute top-4 right-4 p-2.5 rounded-full bg-background/80 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity z-10"
+          onClick={handleShare}
+          className="p-2.5 rounded-full bg-background/80 backdrop-blur-sm"
         >
-          <Bookmark 
-            className={`w-5 h-5 transition-colors ${isBookmarked ? 'fill-primary text-primary' : 'text-muted-foreground hover:text-primary'}`} 
-          />
+          <Share2 className="w-5 h-5 text-muted-foreground hover:text-primary transition-colors" />
         </button>
-      )}
+        {onToggleBookmark && (
+          <button
+            onClick={handleBookmarkClick}
+            className="p-2.5 rounded-full bg-background/80 backdrop-blur-sm"
+          >
+            <Bookmark 
+              className={`w-5 h-5 transition-colors ${isBookmarked ? 'fill-primary text-primary' : 'text-muted-foreground hover:text-primary'}`} 
+            />
+          </button>
+        )}
+      </div>
 
       <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10">
         <div className="flex items-center gap-3 mb-4">
