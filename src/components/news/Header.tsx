@@ -1,5 +1,5 @@
-import { Search, Bookmark, Star } from "lucide-react";
-import { useState } from "react";
+import { Search, Bookmark, Star, Moon, Sun } from "lucide-react";
+import { useState, useEffect } from "react";
 
 interface HeaderProps {
   onSearch: (query: string) => void;
@@ -11,6 +11,21 @@ interface HeaderProps {
 const Header = ({ onSearch, bookmarkCount, onShowBookmarks, showingBookmarks }: HeaderProps) => {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
+  const [isDark, setIsDark] = useState(true);
+
+  useEffect(() => {
+    const stored = localStorage.getItem('theme');
+    const prefersDark = stored === 'dark' || (!stored && true);
+    setIsDark(prefersDark);
+    document.documentElement.classList.toggle('dark', prefersDark);
+  }, []);
+
+  const toggleTheme = () => {
+    const newTheme = !isDark;
+    setIsDark(newTheme);
+    document.documentElement.classList.toggle('dark', newTheme);
+    localStorage.setItem('theme', newTheme ? 'dark' : 'light');
+  };
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,6 +55,18 @@ const Header = ({ onSearch, bookmarkCount, onShowBookmarks, showingBookmarks }: 
               <Star className="w-4 h-4" />
               <span className="hidden sm:inline">Star on GitHub</span>
             </a>
+
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-full hover:bg-secondary transition-colors duration-200"
+              aria-label="Toggle theme"
+            >
+              {isDark ? (
+                <Sun className="w-5 h-5 text-muted-foreground" />
+              ) : (
+                <Moon className="w-5 h-5 text-muted-foreground" />
+              )}
+            </button>
 
             {searchOpen ? (
               <form onSubmit={handleSearch} className="animate-fade-in">

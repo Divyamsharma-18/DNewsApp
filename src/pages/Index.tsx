@@ -71,7 +71,7 @@ const Index = () => {
   };
 
   const handleDeleteSelected = () => {
-    if (selectedBookmarks.length === bookmarks.length) {
+    if (selectedBookmarks.length === 0) {
       clearAllBookmarks();
     } else {
       removeMultipleBookmarks(selectedBookmarks);
@@ -127,11 +127,10 @@ const Index = () => {
                   </button>
                   <button
                     onClick={() => setShowDeleteDialog(true)}
-                    disabled={selectedBookmarks.length === 0}
-                    className="flex items-center gap-2 px-4 py-2 rounded-lg bg-destructive/10 text-destructive hover:bg-destructive/20 text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex items-center gap-2 px-4 py-2 rounded-lg bg-destructive/10 text-destructive hover:bg-destructive/20 text-sm font-medium transition-colors"
                   >
                     <Trash2 className="w-4 h-4" />
-                    Delete {selectedBookmarks.length > 0 ? `(${selectedBookmarks.length})` : 'Selected'}
+                    {selectedBookmarks.length > 0 ? `Delete Selected (${selectedBookmarks.length})` : 'Delete All'}
                   </button>
                 </div>
               )}
@@ -260,7 +259,7 @@ const Index = () => {
           <AlertDialogHeader>
             <AlertDialogTitle>Delete Bookmarks</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete {selectedBookmarks.length === bookmarks.length ? 'all' : selectedBookmarks.length} bookmark{selectedBookmarks.length !== 1 ? 's' : ''}? This action cannot be undone.
+              Are you sure you want to delete {selectedBookmarks.length === 0 ? 'all' : selectedBookmarks.length} bookmark{selectedBookmarks.length !== 1 ? 's' : ''}? This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -274,5 +273,4 @@ const Index = () => {
     </div>
   );
 };
-
 export default Index;
