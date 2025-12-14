@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Twitter, Github } from "lucide-react";
 import Header from "@/components/news/Header";
 import CategoryNav from "@/components/news/CategoryNav";
 import FeaturedArticle from "@/components/news/FeaturedArticle";
@@ -125,20 +126,51 @@ const Index = () => {
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               <div className="w-6 h-6 rounded-md bg-primary flex items-center justify-center">
-                <span className="text-primary-foreground font-bold text-xs">N</span>
+                <span className="text-primary-foreground font-bold text-xs">D</span>
               </div>
               <span className="text-sm text-muted-foreground">
                 Powered by The Guardian API
               </span>
             </div>
-            <p className="text-xs text-muted-foreground">
-              © {new Date().getFullYear()} Newsfeed. All rights reserved.
-            </p>
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-muted-foreground">
+                Made with ❤️ by{" "}
+                <a
+                  href="https://divyamsharma.netlify.app/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary hover:underline"
+                >
+                  Divyam Sharma
+                </a>
+              </span>
+              <span className="inline-flex items-center gap-0.5">
+                <a
+                  href="https://x.com/Heydivyamsharma"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="X profile"
+                  className="inline-flex items-center justify-center w-6 h-6 rounded-full hover:bg-secondary transition-colors"
+                  title="X"
+                >
+                  <Twitter className="w-4 h-4 relative top-[1.2px]" />
+                </a>
+                <a
+                  href="https://github.com/Divyamsharma-18"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="GitHub profile"
+                  className="inline-flex items-center justify-center w-6 h-6 rounded-full hover:bg-secondary transition-colors"
+                  title="GitHub"
+                >
+                  <Github className="w-4 h-4 relative top-[2px]" />
+                </a>
+              </span>
+            </div>
           </div>
         </div>
       </footer>
     </div>
   );
 };
-
 export default Index;

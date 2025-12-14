@@ -74,26 +74,28 @@ const ArticleCard = ({
       rel="noopener noreferrer"
       className="article-card hover-lift group relative"
     >
-      {article.fields?.thumbnail && (
-        <div className="aspect-[16/10] overflow-hidden">
-          <img
-            src={article.fields.thumbnail}
-            alt=""
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-          />
-        </div>
-      )}
+      <div className="relative">
+        {article.fields?.thumbnail && (
+          <div className="aspect-[16/10] overflow-hidden">
+            <img
+              src={article.fields.thumbnail}
+              alt=""
+              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+            />
+          </div>
+        )}
 
-      {onToggleBookmark && (
-        <button
-          onClick={handleBookmarkClick}
-          className="absolute top-3 right-3 p-2 rounded-full bg-background/80 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity"
-        >
-          <Bookmark 
-            className={`w-5 h-5 transition-colors ${isBookmarked ? 'fill-primary text-primary' : 'text-muted-foreground hover:text-primary'}`} 
-          />
-        </button>
-      )}
+        {onToggleBookmark && (
+          <button
+            onClick={handleBookmarkClick}
+            className="absolute top-3 right-3 p-2 rounded-full bg-background/80 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity z-10"
+          >
+            <Bookmark 
+              className={`w-5 h-5 transition-colors ${isBookmarked ? 'fill-primary text-primary' : 'text-muted-foreground hover:text-primary'}`} 
+            />
+          </button>
+        )}
+      </div>
 
       <div className="p-5">
         <div className="flex items-center gap-2 mb-3">
