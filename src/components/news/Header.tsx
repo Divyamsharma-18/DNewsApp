@@ -146,4 +146,5 @@ const Header = ({ onSearch, bookmarkCount, onShowBookmarks, showingBookmarks }: 
     </header>
   );
 };
+
 export default Header;
