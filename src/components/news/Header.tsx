@@ -1,4 +1,4 @@
-import { Search, Bookmark, Star, Moon, Sun, Globe } from "lucide-react";
+import { Search, Bookmark, Star, Moon, Sun, Globe, Menu, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useLanguage, Language } from "@/contexts/LanguageContext";
 
@@ -14,10 +14,10 @@ const Header = ({ onSearch, bookmarkCount, onShowBookmarks, showingBookmarks }: 
   const [searchValue, setSearchValue] = useState("");
   const [isDark, setIsDark] = useState(true);
   const [langMenuOpen, setLangMenuOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { language, setLanguage, t } = useLanguage();
 
   useEffect(() => {
-    // Check localStorage or default to dark
     const stored = localStorage.getItem('theme');
     const prefersDark = stored === 'dark' || (!stored && true);
     setIsDark(prefersDark);
@@ -34,6 +34,8 @@ const Header = ({ onSearch, bookmarkCount, onShowBookmarks, showingBookmarks }: 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     onSearch(searchValue);
+    setSearchOpen(false);
+    setMobileMenuOpen(false);
   };
 
   const handleLanguageChange = (lang: Language) => {
@@ -41,20 +43,26 @@ const Header = ({ onSearch, bookmarkCount, onShowBookmarks, showingBookmarks }: 
     setLangMenuOpen(false);
   };
 
+  const handleBookmarkClick = () => {
+    onShowBookmarks();
+    setMobileMenuOpen(false);
+  };
+
   return (
     <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/50">
-      <div className="container mx-auto px-6 py-4">
+      <div className="container mx-auto px-4 sm:px-6 py-3 sm:py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
               <span className="text-primary-foreground font-bold text-sm">D</span>
             </div>
-            <h1 className="text-xl font-serif font-semibold tracking-tight">
+            <h1 className="text-lg sm:text-xl font-serif font-semibold tracking-tight">
               {t.appName}
             </h1>
           </div>
 
-          <div className="flex items-center gap-2">
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center gap-2">
             <a
               href="https://github.com/Divyamsharma-18/DNewsApp"
               target="_blank"
@@ -62,7 +70,7 @@ const Header = ({ onSearch, bookmarkCount, onShowBookmarks, showingBookmarks }: 
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-secondary/80 hover:bg-secondary text-sm font-medium transition-colors duration-200"
             >
               <Star className="w-4 h-4" />
-              <span className="hidden sm:inline">{t.starOnGithub}</span>
+              <span>{t.starOnGithub}</span>
             </a>
 
             {/* Language Switcher */}
@@ -142,9 +150,111 @@ const Header = ({ onSearch, bookmarkCount, onShowBookmarks, showingBookmarks }: 
               )}
             </button>
           </div>
+
+          {/* Mobile Hamburger */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden p-2 rounded-full hover:bg-secondary transition-colors duration-200"
+            aria-label="Menu"
+          >
+            {mobileMenuOpen ? (
+              <X className="w-5 h-5 text-muted-foreground" />
+            ) : (
+              <Menu className="w-5 h-5 text-muted-foreground" />
+            )}
+          </button>
         </div>
+
+        {/* Mobile Menu */}
+        {mobileMenuOpen && (
+          <div className="md:hidden mt-4 pb-2 animate-fade-in space-y-3">
+            {/* Search Bar */}
+            <form onSubmit={handleSearch}>
+              <input
+                type="text"
+                placeholder={t.searchPlaceholder}
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
+                className="search-input w-full"
+              />
+            </form>
+
+            <div className="flex flex-wrap items-center gap-2">
+              <a
+                href="https://github.com/Divyamsharma-18/DNewsApp"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-secondary/80 hover:bg-secondary text-sm font-medium transition-colors duration-200"
+              >
+                <Star className="w-4 h-4" />
+                <span>{t.starOnGithub}</span>
+              </a>
+
+              {/* Language Switcher */}
+              <div className="relative">
+                <button
+                  onClick={() => setLangMenuOpen(!langMenuOpen)}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-secondary/80 hover:bg-secondary text-sm font-medium transition-colors duration-200"
+                  aria-label="Change language"
+                >
+                  <Globe className="w-4 h-4" />
+                  <span className="text-xs font-medium uppercase">{language}</span>
+                </button>
+                {langMenuOpen && (
+                  <div className="absolute left-0 mt-2 w-32 bg-card border border-border rounded-lg shadow-lg overflow-hidden animate-fade-in z-50">
+                    <button
+                      onClick={() => handleLanguageChange("en")}
+                      className={`w-full px-4 py-2 text-left text-sm hover:bg-secondary transition-colors ${language === "en" ? "bg-primary/10 text-primary" : ""}`}
+                    >
+                      🇬🇧 English
+                    </button>
+                    <button
+                      onClick={() => handleLanguageChange("de")}
+                      className={`w-full px-4 py-2 text-left text-sm hover:bg-secondary transition-colors ${language === "de" ? "bg-primary/10 text-primary" : ""}`}
+                    >
+                      🇩🇪 Deutsch
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              <button
+                onClick={toggleTheme}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-secondary/80 hover:bg-secondary text-sm font-medium transition-colors duration-200"
+                aria-label="Toggle theme"
+              >
+                {isDark ? (
+                  <>
+                    <Sun className="w-4 h-4" />
+                    <span>Light</span>
+                  </>
+                ) : (
+                  <>
+                    <Moon className="w-4 h-4" />
+                    <span>Dark</span>
+                  </>
+                )}
+              </button>
+
+              <button
+                onClick={handleBookmarkClick}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium transition-colors duration-200 relative ${showingBookmarks ? 'bg-primary/20 text-primary' : 'bg-secondary/80 hover:bg-secondary'}`}
+                aria-label={t.bookmarks}
+              >
+                <Bookmark className={`w-4 h-4 ${showingBookmarks ? 'fill-primary text-primary' : ''}`} />
+                <span>{t.bookmarks}</span>
+                {bookmarkCount > 0 && (
+                  <span className="ml-1 px-1.5 py-0.5 bg-primary text-primary-foreground text-xs rounded-full">
+                    {bookmarkCount > 9 ? '9+' : bookmarkCount}
+                  </span>
+                )}
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </header>
   );
 };
+
 export default Header;
