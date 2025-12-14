@@ -6,6 +6,9 @@ interface ArticleGridProps {
   isLoading: boolean;
   isBookmarked?: (id: string) => boolean;
   onToggleBookmark?: (article: Article) => void;
+  selectionMode?: boolean;
+  selectedIds?: string[];
+  onToggleSelect?: (articleId: string) => void;
 }
 
 const ArticleSkeleton = () => (
@@ -24,7 +27,7 @@ const ArticleSkeleton = () => (
   </div>
 );
 
-const ArticleGrid = ({ articles, isLoading, isBookmarked, onToggleBookmark }: ArticleGridProps) => {
+const ArticleGrid = ({ articles, isLoading, isBookmarked, onToggleBookmark, selectionMode, selectedIds = [], onToggleSelect }: ArticleGridProps) => {
   if (isLoading) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -58,6 +61,9 @@ const ArticleGrid = ({ articles, isLoading, isBookmarked, onToggleBookmark }: Ar
             article={article} 
             isBookmarked={isBookmarked?.(article.id)}
             onToggleBookmark={onToggleBookmark}
+            selectionMode={selectionMode}
+            isSelected={selectedIds.includes(article.id)}
+            onToggleSelect={onToggleSelect}
           />
         </div>
       ))}

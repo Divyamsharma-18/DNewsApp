@@ -1,7 +1,7 @@
 import { Article } from "@/types/news";
 import { formatDistanceToNow } from "date-fns";
 import { de, enUS } from "date-fns/locale";
-import { Bookmark, Share2 } from "lucide-react";
+import { Bookmark, Share2, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -10,19 +10,33 @@ interface ArticleCardProps {
   variant?: "default" | "compact";
   isBookmarked?: boolean;
   onToggleBookmark?: (article: Article) => void;
+  selectionMode?: boolean;
+  isSelected?: boolean;
+  onToggleSelect?: (articleId: string) => void;
 }
 
 const ArticleCard = ({ 
   article, 
   variant = "default",
   isBookmarked = false,
-  onToggleBookmark 
+  onToggleBookmark,
+  selectionMode = false,
+  isSelected = false,
+  onToggleSelect
 }: ArticleCardProps) => {
   const { language, t } = useLanguage();
   const timeAgo = formatDistanceToNow(new Date(article.webPublicationDate), {
     addSuffix: true,
     locale: language === "de" ? de : enUS,
   });
+
+  const handleCardClick = (e: React.MouseEvent) => {
+    if (selectionMode && onToggleSelect) {
+      e.preventDefault();
+      e.stopPropagation();
+      onToggleSelect(article.id);
+    }
+  };
 
   const handleBookmarkClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -106,12 +120,18 @@ const ArticleCard = ({
 
   return (
     <a
-      href={article.webUrl}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="article-card hover-lift group relative"
+      href={selectionMode ? undefined : article.webUrl}
+      target={selectionMode ? undefined : "_blank"}
+      rel={selectionMode ? undefined : "noopener noreferrer"}
+      onClick={handleCardClick}
+      className={`article-card hover-lift group relative cursor-pointer ${selectionMode && isSelected ? 'ring-2 ring-primary' : ''}`}
     >
       <div className="relative">
+        {selectionMode && (
+          <div className={`absolute top-3 left-3 z-20 p-1 rounded-full transition-all ${isSelected ? 'bg-primary' : 'bg-background/80 backdrop-blur-sm'}`}>
+            <CheckCircle2 className={`w-5 h-5 transition-colors ${isSelected ? 'text-primary-foreground' : 'text-muted-foreground'}`} />
+          </div>
+        )}
         {article.fields?.thumbnail && (
           <div className="aspect-[16/10] overflow-hidden">
             <img
@@ -122,24 +142,26 @@ const ArticleCard = ({
           </div>
         )}
 
-        <div className="absolute top-3 right-3 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity z-10">
-          <button
-            onClick={handleShare}
-            className="p-2 rounded-full bg-background/80 backdrop-blur-sm"
-          >
-            <Share2 className="w-5 h-5 text-muted-foreground hover:text-primary transition-colors" />
-          </button>
-          {onToggleBookmark && (
+        {!selectionMode && (
+          <div className="absolute top-3 right-3 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity z-10">
             <button
-              onClick={handleBookmarkClick}
+              onClick={handleShare}
               className="p-2 rounded-full bg-background/80 backdrop-blur-sm"
             >
-              <Bookmark 
-                className={`w-5 h-5 transition-colors ${isBookmarked ? 'fill-primary text-primary' : 'text-muted-foreground hover:text-primary'}`} 
-              />
+              <Share2 className="w-5 h-5 text-muted-foreground hover:text-primary transition-colors" />
             </button>
-          )}
-        </div>
+            {onToggleBookmark && (
+              <button
+                onClick={handleBookmarkClick}
+                className="p-2 rounded-full bg-background/80 backdrop-blur-sm"
+              >
+                <Bookmark 
+                  className={`w-5 h-5 transition-colors ${isBookmarked ? 'fill-primary text-primary' : 'text-muted-foreground hover:text-primary'}`} 
+                />
+              </button>
+            )}
+          </div>
+        )}
       </div>
 
       <div className="p-5">
@@ -165,4 +187,5 @@ const ArticleCard = ({
     </a>
   );
 };
+
 export default ArticleCard;

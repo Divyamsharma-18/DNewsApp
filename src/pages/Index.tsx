@@ -7,6 +7,7 @@ import ArticleGrid from "@/components/news/ArticleGrid";
 import TrendingSidebar from "@/components/news/TrendingSidebar";
 import { useGuardianNews } from "@/hooks/useGuardianNews";
 import { useBookmarks } from "@/hooks/useBookmarks";
+import { useLanguage } from "@/contexts/LanguageContext";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -24,6 +25,8 @@ const Index = () => {
   const [showBookmarks, setShowBookmarks] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [selectedBookmarks, setSelectedBookmarks] = useState<string[]>([]);
+
+  const { t, language } = useLanguage();
 
   const { data: articles = [], isLoading } = useGuardianNews(
     activeCategory,
@@ -107,9 +110,9 @@ const Index = () => {
           <div className="mb-8">
             <div className="flex items-center justify-between flex-wrap gap-4">
               <div>
-                <h2 className="text-2xl font-serif font-medium">Your Bookmarks</h2>
+                <h2 className="text-2xl font-serif font-medium">{t.yourBookmarks}</h2>
                 <p className="text-muted-foreground mt-1">
-                  {bookmarks.length} saved {bookmarks.length === 1 ? 'article' : 'articles'}
+                  {bookmarks.length} {bookmarks.length === 1 ? t.savedArticle : t.savedArticles}
                 </p>
               </div>
               {bookmarks.length > 0 && (
@@ -123,34 +126,22 @@ const Index = () => {
                     ) : (
                       <Square className="w-4 h-4" />
                     )}
-                    {selectedBookmarks.length === bookmarks.length ? 'Deselect All' : 'Select All'}
+                    {selectedBookmarks.length === bookmarks.length ? t.deselectAll : t.selectAll}
                   </button>
                   <button
                     onClick={() => setShowDeleteDialog(true)}
                     className="flex items-center gap-2 px-4 py-2 rounded-lg bg-destructive/10 text-destructive hover:bg-destructive/20 text-sm font-medium transition-colors"
                   >
                     <Trash2 className="w-4 h-4" />
-                    {selectedBookmarks.length > 0 ? `Delete Selected (${selectedBookmarks.length})` : 'Delete All'}
+                    {selectedBookmarks.length > 0 ? `${t.deleteSelected} (${selectedBookmarks.length})` : t.deleteAll}
                   </button>
                 </div>
               )}
             </div>
-            {bookmarks.length > 0 && selectedBookmarks.length > 0 && (
-              <div className="mt-4 flex flex-wrap gap-2">
-                {bookmarks.map((bookmark) => (
-                  <button
-                    key={bookmark.id}
-                    onClick={() => handleToggleSelect(bookmark.id)}
-                    className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
-                      selectedBookmarks.includes(bookmark.id)
-                        ? 'bg-primary text-primary-foreground'
-                        : 'bg-secondary/50 hover:bg-secondary'
-                    }`}
-                  >
-                    {bookmark.webTitle.slice(0, 30)}...
-                  </button>
-                ))}
-              </div>
+            {bookmarks.length > 0 && (
+              <p className="mt-2 text-sm text-muted-foreground">
+                {language === "de" ? "Klicke auf Artikel um sie auszuwählen" : "Click on articles to select them"}
+              </p>
             )}
           </div>
         )}
@@ -170,10 +161,10 @@ const Index = () => {
         {searchQuery && !showBookmarks && (
           <div className="mb-8">
             <h2 className="text-2xl font-serif font-medium">
-              Results for "{searchQuery}"
+              {t.resultsFor} "{searchQuery}"
             </h2>
             <p className="text-muted-foreground mt-1">
-              {articles.length} articles found
+              {articles.length} {t.articlesFound}
             </p>
           </div>
         )}
@@ -186,6 +177,9 @@ const Index = () => {
               isLoading={isLoading && !showBookmarks}
               isBookmarked={isBookmarked}
               onToggleBookmark={toggleBookmark}
+              selectionMode={showBookmarks}
+              selectedIds={selectedBookmarks}
+              onToggleSelect={handleToggleSelect}
             />
           </div>
 
@@ -211,12 +205,12 @@ const Index = () => {
                 <span className="text-primary-foreground font-bold text-xs">D</span>
               </div>
               <span className="text-sm text-muted-foreground">
-                Powered by The Guardian API
+                {t.poweredBy}
               </span>
             </div>
             <div className="flex items-center gap-2">
               <span className="text-sm text-muted-foreground">
-                Made with ❤️ by{" "}
+                {t.madeWith}{" "}
                 <a
                   href="https://divyamsharma.netlify.app/"
                   target="_blank"
@@ -257,15 +251,15 @@ const Index = () => {
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Bookmarks</AlertDialogTitle>
+            <AlertDialogTitle>{t.deleteBookmarks}</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete {selectedBookmarks.length === 0 ? 'all' : selectedBookmarks.length} bookmark{selectedBookmarks.length !== 1 ? 's' : ''}? This action cannot be undone.
+              {selectedBookmarks.length === 0 ? t.deleteConfirmAll : t.deleteConfirmSelected}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{t.cancel}</AlertDialogCancel>
             <AlertDialogAction onClick={handleDeleteSelected} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-              Delete
+              {t.delete}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -273,4 +267,5 @@ const Index = () => {
     </div>
   );
 };
+
 export default Index;
