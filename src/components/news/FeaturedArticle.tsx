@@ -1,7 +1,9 @@
 import { Article } from "@/types/news";
 import { formatDistanceToNow } from "date-fns";
+import { de, enUS } from "date-fns/locale";
 import { ArrowUpRight, Bookmark, Share2 } from "lucide-react";
 import { toast } from "sonner";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface FeaturedArticleProps {
   article: Article;
@@ -10,8 +12,10 @@ interface FeaturedArticleProps {
 }
 
 const FeaturedArticle = ({ article, isBookmarked = false, onToggleBookmark }: FeaturedArticleProps) => {
+  const { language, t } = useLanguage();
   const timeAgo = formatDistanceToNow(new Date(article.webPublicationDate), {
     addSuffix: true,
+    locale: language === "de" ? de : enUS,
   });
 
   const handleBookmarkClick = (e: React.MouseEvent) => {
@@ -34,12 +38,12 @@ const FeaturedArticle = ({ article, isBookmarked = false, onToggleBookmark }: Fe
         await navigator.share(shareData);
       } else {
         await navigator.clipboard.writeText(article.webUrl);
-        toast.success("Link copied to clipboard!");
+        toast.success(t.linkCopied);
       }
     } catch (error) {
       if ((error as Error).name !== 'AbortError') {
         await navigator.clipboard.writeText(article.webUrl);
-        toast.success("Link copied to clipboard!");
+        toast.success(t.linkCopied);
       }
     }
   };
@@ -102,12 +106,11 @@ const FeaturedArticle = ({ article, isBookmarked = false, onToggleBookmark }: Fe
         )}
 
         <div className="flex items-center gap-2 mt-4 text-sm text-muted-foreground group-hover:text-primary transition-colors">
-          <span>Read article</span>
+          <span>{t.readMore}</span>
           <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
         </div>
       </div>
     </a>
   );
 };
-
 export default FeaturedArticle;

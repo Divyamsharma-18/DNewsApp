@@ -1,5 +1,6 @@
-import { Search, Bookmark, Star, Moon, Sun } from "lucide-react";
+import { Search, Bookmark, Star, Moon, Sun, Globe } from "lucide-react";
 import { useState, useEffect } from "react";
+import { useLanguage, Language } from "@/contexts/LanguageContext";
 
 interface HeaderProps {
   onSearch: (query: string) => void;
@@ -12,6 +13,8 @@ const Header = ({ onSearch, bookmarkCount, onShowBookmarks, showingBookmarks }: 
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [isDark, setIsDark] = useState(true);
+  const [langMenuOpen, setLangMenuOpen] = useState(false);
+  const { language, setLanguage, t } = useLanguage();
 
   useEffect(() => {
     const stored = localStorage.getItem('theme');
@@ -30,6 +33,11 @@ const Header = ({ onSearch, bookmarkCount, onShowBookmarks, showingBookmarks }: 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     onSearch(searchValue);
+  };
+
+  const handleLanguageChange = (lang: Language) => {
+    setLanguage(lang);
+    setLangMenuOpen(false);
   };
 
   return (
@@ -53,8 +61,36 @@ const Header = ({ onSearch, bookmarkCount, onShowBookmarks, showingBookmarks }: 
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-secondary/80 hover:bg-secondary text-sm font-medium transition-colors duration-200"
             >
               <Star className="w-4 h-4" />
-              <span className="hidden sm:inline">Star on GitHub</span>
+              <span className="hidden sm:inline">{t.starOnGithub}</span>
             </a>
+
+            {/* Language Switcher */}
+            <div className="relative">
+              <button
+                onClick={() => setLangMenuOpen(!langMenuOpen)}
+                className="flex items-center gap-1.5 p-2 rounded-full hover:bg-secondary transition-colors duration-200"
+                aria-label="Change language"
+              >
+                <Globe className="w-5 h-5 text-muted-foreground" />
+                <span className="text-xs font-medium uppercase">{language}</span>
+              </button>
+              {langMenuOpen && (
+                <div className="absolute right-0 mt-2 w-32 bg-card border border-border rounded-lg shadow-lg overflow-hidden animate-fade-in z-50">
+                  <button
+                    onClick={() => handleLanguageChange("en")}
+                    className={`w-full px-4 py-2 text-left text-sm hover:bg-secondary transition-colors ${language === "en" ? "bg-primary/10 text-primary" : ""}`}
+                  >
+                    🇬🇧 English
+                  </button>
+                  <button
+                    onClick={() => handleLanguageChange("de")}
+                    className={`w-full px-4 py-2 text-left text-sm hover:bg-secondary transition-colors ${language === "de" ? "bg-primary/10 text-primary" : ""}`}
+                  >
+                    🇩🇪 Deutsch
+                  </button>
+                </div>
+              )}
+            </div>
 
             <button
               onClick={toggleTheme}
@@ -72,7 +108,7 @@ const Header = ({ onSearch, bookmarkCount, onShowBookmarks, showingBookmarks }: 
               <form onSubmit={handleSearch} className="animate-fade-in">
                 <input
                   type="text"
-                  placeholder="Search stories..."
+                  placeholder={t.searchPlaceholder}
                   value={searchValue}
                   onChange={(e) => setSearchValue(e.target.value)}
                   className="search-input w-64"
@@ -86,7 +122,7 @@ const Header = ({ onSearch, bookmarkCount, onShowBookmarks, showingBookmarks }: 
               <button
                 onClick={() => setSearchOpen(true)}
                 className="p-2 rounded-full hover:bg-secondary transition-colors duration-200"
-                aria-label="Search"
+                aria-label={t.search}
               >
                 <Search className="w-5 h-5 text-muted-foreground" />
               </button>
@@ -95,7 +131,7 @@ const Header = ({ onSearch, bookmarkCount, onShowBookmarks, showingBookmarks }: 
             <button
               onClick={onShowBookmarks}
               className={`p-2 rounded-full transition-colors duration-200 relative ${showingBookmarks ? 'bg-primary/20 text-primary' : 'hover:bg-secondary'}`}
-              aria-label="Bookmarks"
+              aria-label={t.bookmarks}
             >
               <Bookmark className={`w-5 h-5 ${showingBookmarks ? 'fill-primary text-primary' : 'text-muted-foreground'}`} />
               {bookmarkCount > 0 && (
