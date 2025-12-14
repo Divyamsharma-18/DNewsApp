@@ -5,6 +5,7 @@ import CategoryNav from "@/components/news/CategoryNav";
 import FeaturedArticle from "@/components/news/FeaturedArticle";
 import ArticleGrid from "@/components/news/ArticleGrid";
 import TrendingSidebar from "@/components/news/TrendingSidebar";
+import ScrollProgress from "@/components/news/ScrollProgress";
 import { useGuardianNews } from "@/hooks/useGuardianNews";
 import { useBookmarks } from "@/hooks/useBookmarks";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -93,6 +94,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <ScrollProgress />
       <Header 
         onSearch={handleSearch} 
         bookmarkCount={bookmarks.length}

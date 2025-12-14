@@ -22,7 +22,7 @@ const CategoryNav = ({ activeCategory, onCategoryChange }: CategoryNavProps) => 
   ];
 
   return (
-    <nav className="sticky top-[73px] z-40 bg-background/80 backdrop-blur-xl border-b border-border/30">
+    <nav className="sticky top-[60px] sm:top-[69px] z-40 bg-background/80 backdrop-blur-xl border-b border-border/30">
       <div className="container mx-auto px-6 py-4">
         <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide pb-1">
           {categories.map((category) => (
