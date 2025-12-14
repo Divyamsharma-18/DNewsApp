@@ -50,7 +50,7 @@ const Header = ({ onSearch, bookmarkCount, onShowBookmarks, showingBookmarks }: 
               <span className="text-primary-foreground font-bold text-sm">D</span>
             </div>
             <h1 className="text-xl font-serif font-semibold tracking-tight">
-              DNewsApp
+              {t.appName}
             </h1>
           </div>
 
