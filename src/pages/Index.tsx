@@ -26,7 +26,7 @@ const Index = () => {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [selectedBookmarks, setSelectedBookmarks] = useState<string[]>([]);
 
-  const { t, language } = useLanguage();
+  const { t } = useLanguage();
 
   const { data: articles = [], isLoading } = useGuardianNews(
     activeCategory,
@@ -138,10 +138,22 @@ const Index = () => {
                 </div>
               )}
             </div>
-            {bookmarks.length > 0 && (
-              <p className="mt-2 text-sm text-muted-foreground">
-                {language === "de" ? "Klicke auf Artikel um sie auszuwählen" : "Click on articles to select them"}
-              </p>
+            {bookmarks.length > 0 && selectedBookmarks.length > 0 && (
+              <div className="mt-4 flex flex-wrap gap-2">
+                {bookmarks.map((bookmark) => (
+                  <button
+                    key={bookmark.id}
+                    onClick={() => handleToggleSelect(bookmark.id)}
+                    className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
+                      selectedBookmarks.includes(bookmark.id)
+                        ? 'bg-primary text-primary-foreground'
+                        : 'bg-secondary/50 hover:bg-secondary'
+                    }`}
+                  >
+                    {bookmark.webTitle.slice(0, 30)}...
+                  </button>
+                ))}
+              </div>
             )}
           </div>
         )}
@@ -177,9 +189,6 @@ const Index = () => {
               isLoading={isLoading && !showBookmarks}
               isBookmarked={isBookmarked}
               onToggleBookmark={toggleBookmark}
-              selectionMode={showBookmarks}
-              selectedIds={selectedBookmarks}
-              onToggleSelect={handleToggleSelect}
             />
           </div>
 

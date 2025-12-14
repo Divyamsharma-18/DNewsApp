@@ -4,7 +4,6 @@ export type Language = "en" | "de";
 
 interface Translations {
   // Header
-  appName: string;
   starOnGithub: string;
   search: string;
   searchPlaceholder: string;
@@ -58,7 +57,6 @@ interface Translations {
 
 const translations: Record<Language, Translations> = {
   en: {
-    appName: "DNewsApp",
     starOnGithub: "Star on GitHub",
     search: "Search",
     searchPlaceholder: "Search stories...",
@@ -103,7 +101,6 @@ const translations: Record<Language, Translations> = {
     loading: "Loading...",
   },
   de: {
-    appName: "DNachrichtenApp",
     starOnGithub: "Stern auf GitHub",
     search: "Suchen",
     searchPlaceholder: "Geschichten suchen...",

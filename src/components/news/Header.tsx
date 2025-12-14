@@ -17,6 +17,7 @@ const Header = ({ onSearch, bookmarkCount, onShowBookmarks, showingBookmarks }: 
   const { language, setLanguage, t } = useLanguage();
 
   useEffect(() => {
+    // Check localStorage or default to dark
     const stored = localStorage.getItem('theme');
     const prefersDark = stored === 'dark' || (!stored && true);
     setIsDark(prefersDark);
@@ -49,7 +50,7 @@ const Header = ({ onSearch, bookmarkCount, onShowBookmarks, showingBookmarks }: 
               <span className="text-primary-foreground font-bold text-sm">D</span>
             </div>
             <h1 className="text-xl font-serif font-semibold tracking-tight">
-              {t.appName}
+              DNewsApp
             </h1>
           </div>
 
@@ -146,5 +147,4 @@ const Header = ({ onSearch, bookmarkCount, onShowBookmarks, showingBookmarks }: 
     </header>
   );
 };
-
 export default Header;
