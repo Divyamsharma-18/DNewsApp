@@ -184,8 +184,8 @@ const Index = () => {
         )}
 
         {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          <div className="lg:col-span-3">
+        <div className={`grid grid-cols-1 gap-8 ${showBookmarks ? '' : 'lg:grid-cols-4'}`}>
+          <div className={showBookmarks ? '' : 'lg:col-span-3'}>
             <ArticleGrid 
               articles={gridArticles} 
               isLoading={isLoading && !showBookmarks}
