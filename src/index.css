@@ -154,8 +154,8 @@
   }
 
   .article-card {
-    @apply relative overflow-hidden rounded-2xl bg-card border border-border/50 
-           transition-all duration-300 hover:border-border hover:bg-card/80;
+    @apply relative overflow-hidden rounded-2xl bg-card
+           transition-all duration-300 hover:bg-card/80;
   }
 
   .search-input {
