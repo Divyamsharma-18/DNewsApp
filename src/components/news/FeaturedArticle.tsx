@@ -53,7 +53,8 @@ const FeaturedArticle = ({ article, isBookmarked = false, onToggleBookmark }: Fe
       href={article.webUrl}
       target="_blank"
       rel="noopener noreferrer"
-      className="group block relative overflow-hidden rounded-3xl bg-card aspect-[16/9] md:aspect-[21/9] hover-lift"
+      // FIX 1: aspect-[4/5] for mobile (tall), aspect-[16/9] for tablet (sm), aspect-[21/9] for desktop (md)
+      className="group block relative overflow-hidden rounded-3xl bg-card aspect-[4/5] sm:aspect-[16/9] md:aspect-[21/9] hover-lift"
     >
       {article.fields?.thumbnail ? (
         <img
@@ -65,7 +66,8 @@ const FeaturedArticle = ({ article, isBookmarked = false, onToggleBookmark }: Fe
         <div className="absolute inset-0 bg-gradient-to-br from-secondary to-muted" />
       )}
 
-      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent" />
+      {/* Gradient adjusted to be stronger on mobile to ensure text readability */}
+      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
 
       <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
         <button
@@ -87,25 +89,27 @@ const FeaturedArticle = ({ article, isBookmarked = false, onToggleBookmark }: Fe
       </div>
 
       <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10">
-        <div className="flex items-center gap-3 mb-4">
+        <div className="flex items-center gap-3 mb-3 md:mb-4">
           <span className="px-3 py-1 text-xs font-medium bg-primary/90 text-primary-foreground rounded-full">
             {article.sectionName}
           </span>
-          <span className="text-sm text-muted-foreground">{timeAgo}</span>
+          <span className="text-xs md:text-sm text-muted-foreground">{timeAgo}</span>
         </div>
 
-        <h2 className="text-2xl md:text-4xl font-serif font-semibold leading-tight mb-3 text-foreground group-hover:text-primary transition-colors duration-300">
+        {/* FIX 2: Text size is xl on mobile, 4xl on desktop. Added line-clamp to prevent overflow */}
+        <h2 className="text-xl sm:text-2xl md:text-4xl font-serif font-semibold leading-tight mb-2 md:mb-3 text-foreground group-hover:text-primary transition-colors duration-300 line-clamp-3 md:line-clamp-none">
           {article.fields?.headline || article.webTitle}
         </h2>
 
         {article.fields?.trailText && (
           <p
+            // FIX 3: Hide trail text on very small screens if needed, or rely on line-clamp
             className="text-muted-foreground text-sm md:text-base line-clamp-2 max-w-3xl"
             dangerouslySetInnerHTML={{ __html: article.fields.trailText }}
           />
         )}
 
-        <div className="flex items-center gap-2 mt-4 text-sm text-muted-foreground group-hover:text-primary transition-colors">
+        <div className="flex items-center gap-2 mt-3 md:mt-4 text-sm text-muted-foreground group-hover:text-primary transition-colors">
           <span>{t.readMore}</span>
           <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
         </div>
