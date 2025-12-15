@@ -93,7 +93,7 @@ const Index = () => {
   const trendingArticles = articles.slice(1, 6);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background flex flex-col">
       <ScrollProgress />
       <Header 
         onSearch={handleSearch} 
@@ -106,7 +106,7 @@ const Index = () => {
         onCategoryChange={handleCategoryChange}
       />
 
-      <main className="container mx-auto px-6 py-8">
+      <main className="container mx-auto px-6 py-8 flex-1">
         {/* Bookmarks Header */}
         {showBookmarks && (
           <div className="mb-8">
@@ -191,6 +191,7 @@ const Index = () => {
               isLoading={isLoading && !showBookmarks}
               isBookmarked={isBookmarked}
               onToggleBookmark={toggleBookmark}
+              columns={showBookmarks ? 4 : 3}
             />
           </div>
 
