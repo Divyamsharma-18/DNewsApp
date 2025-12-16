@@ -3,19 +3,92 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="shortcut icon" href="icon.png">
-    <title>DNewsApp - Your Daily News Companion</title>
-    <meta name="description" content="Stay informed with the latest news from around the world. A beautifully designed news reader powered by The Guardian." />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    
+    <!-- Primary Meta Tags -->
+    <title>DNewsApp - Your Daily News Companion | Breaking News & Headlines</title>
+    <meta name="title" content="DNewsApp - Your Daily News Companion | Breaking News & Headlines" />
+    <meta name="description" content="Stay informed with the latest breaking news from around the world. Get real-time updates on politics, technology, sports, entertainment, business, and more from trusted sources." />
+    <meta name="keywords" content="news, breaking news, world news, headlines, current events, politics, technology, sports, entertainment, business, science, health, latest news, top stories" />
     <meta name="author" content="DNewsApp" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="googlebot" content="index, follow" />
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://its-dnewsapp.netlify.app/" />
+    <link rel="shortcut icon" href="icon.png">
 
-    <meta property="og:title" content="DNewsApp - Your Daily News Companion" />
-    <meta property="og:description" content="Stay informed with the latest news from around the world. A beautifully designed news reader powered by The Guardian." />
+    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://its-dnewsapp.netlify.app/" />
+    <meta property="og:title" content="DNewsApp - Your Daily News Companion | Breaking News & Headlines" />
+    <meta property="og:description" content="Stay informed with the latest breaking news from around the world. Get real-time updates on politics, technology, sports, entertainment, and more." />
     <meta property="og:image" content="https://its-dnewsapp.netlify.app/og.png" />
+    <meta property="og:image:width" content="1080" />
+    <meta property="og:image:height" content="570" />
+    <meta property="og:site_name" content="DNewsApp" />
+    <meta property="og:locale" content="en_US" />
 
+    <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://its-dnewsapp.netlify.app/" />
+    <meta name="twitter:title" content="DNewsApp - Your Daily News Companion | Breaking News & Headlines" />
+    <meta name="twitter:description" content="Stay informed with the latest breaking news from around the world. Get real-time updates on politics, technology, sports, entertainment, and more." />
+    <meta name="twitter:image" content="https://its-dnewsapp.netlify.app/og.png" />
     <meta name="twitter:site" content="@DNewsApp" />
-    <meta name="twitter:image" content="" />
+    <meta name="twitter:creator" content="@DNewsApp" />
+
+    <!-- Theme & App Meta -->
+    <meta name="theme-color" content="#0a0a0a" />
+    <meta name="msapplication-TileColor" content="#0a0a0a" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="format-detection" content="telephone=no" />
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico" />
+
+    <!-- Preconnect for Performance -->
+    <link rel="preconnect" href="https://content.guardianapis.com" />
+    <link rel="dns-prefetch" href="https://content.guardianapis.com" />
+
+    <!-- Structured Data - Organization -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "NewsMediaOrganization",
+        "name": "DNewsApp",
+        "url": "https://its-dnewsapp.netlify.app/",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://its-dnewsapp.netlify.app/og.png"
+        },
+        "description": "Stay informed with the latest breaking news from around the world.",
+        "sameAs": [
+          "https://twitter.com/DNewsApp"
+        ]
+      }
+    </script>
+
+    <!-- Structured Data - WebSite with SearchAction -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "DNewsApp",
+        "url": "https://its-dnewsapp.netlify.app/",
+        "description": "Your daily news companion for breaking news and headlines",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "https://its-dnewsapp.netlify.app/?search={search_term_string}"
+          },
+          "query-input": "required name=search_term_string"
+        }
+      }
+    </script>
   </head>
 
   <body>
